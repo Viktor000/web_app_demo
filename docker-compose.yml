@@ -1,0 +1,45 @@
+version: "3.7"
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+        - "8080:80"
+    volumes:
+        - ./static/:/usr/share/nginx/html/
+    networks:
+             homenet:
+                    ipv4_address: 192.168.1.241
+    links:
+        - php
+  
+  php:
+    image: php:7.4-apache
+    volumes:
+      - ./dynamic/:/var/www/html
+    networks:
+             homenet:
+                    ipv4_address: 192.168.1.242
+
+  haproxy:  
+    image: haproxy:2.3 
+    container_name: haproxy
+    hostname: haproxy
+    links:
+      - php
+      - web
+    volumes:
+        - ./cfg/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    networks:
+            homenet:
+                    ipv4_address: 192.168.1.250
+networks:
+  homenet:
+    driver: macvlan
+    driver_opts:
+            parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          ip_range: 192.168.1.0/28
+          gateway: 192.168.1.1
