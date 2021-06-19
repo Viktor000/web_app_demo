@@ -8,39 +8,51 @@ services:
     volumes:
         - ./static/:/usr/share/nginx/html/
     networks:
-      backend:
-           #  homenet:
+      frontend:
+           #  public:
            #         ipv4_address: 192.168.1.241
-    links:
-        - php
+
   
-  php:
+  php1:
     image: php:7.4-apache
+    hostname: php
     volumes:
       - ./dynamic/:/var/www/html
     networks:
       backend:
-                
-      #homenet:
+   
+  php2:
+    image: php:7.4-apache
+    hostname: php
+    volumes:
+      - ./dynamic/:/var/www/html
+    networks:
+      backend:
+ 
+      #public:
         #ipv4_address: 192.168.1.242
 
   haproxy:  
     image: haproxy:2.3 
     container_name: haproxy
     hostname: haproxy
-    links:
-      - php
+    links: 
+      - php1
+      - php2
       - web
     volumes:
         - ./cfg/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     networks:
       backend:
-      homenet:
+      frontend:
+      public:
         ipv4_address: 192.168.1.250
 networks:
   backend:
 
-  homenet:
+  frontend:
+    
+  public:
     driver: macvlan
     driver_opts:
             parent: eth0
