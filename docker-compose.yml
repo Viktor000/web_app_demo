@@ -12,7 +12,6 @@ services:
            #  public:
            #         ipv4_address: 192.168.1.241
 
-  
   php1:
     image: php:7.4-apache
     hostname: php
@@ -49,9 +48,7 @@ services:
         ipv4_address: 192.168.1.250
 networks:
   backend:
-
-  frontend:
-    
+  frontend:  
   public:
     driver: macvlan
     driver_opts:
