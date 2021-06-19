@@ -8,8 +8,9 @@ services:
     volumes:
         - ./static/:/usr/share/nginx/html/
     networks:
-             homenet:
-                    ipv4_address: 192.168.1.241
+      backend:
+           #  homenet:
+           #         ipv4_address: 192.168.1.241
     links:
         - php
   
@@ -18,8 +19,10 @@ services:
     volumes:
       - ./dynamic/:/var/www/html
     networks:
-             homenet:
-                    ipv4_address: 192.168.1.242
+      backend:
+                
+      #homenet:
+        #ipv4_address: 192.168.1.242
 
   haproxy:  
     image: haproxy:2.3 
@@ -31,9 +34,12 @@ services:
     volumes:
         - ./cfg/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
     networks:
-            homenet:
-                    ipv4_address: 192.168.1.250
+      backend:
+      homenet:
+        ipv4_address: 192.168.1.250
 networks:
+  backend:
+
   homenet:
     driver: macvlan
     driver_opts:
